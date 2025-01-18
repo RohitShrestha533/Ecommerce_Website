@@ -10,7 +10,12 @@
 
 # production
 /build
+# Logs
+*.log
 
+# IDE / Editor folders
+.vscode/
+.idea/
 # misc
 .DS_Store
 .env.local
