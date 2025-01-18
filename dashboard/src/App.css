@@ -1,0 +1,46 @@
+.nav-item {
+  height: 50px;
+  color: black !important;
+  font-size: larger;
+  width: 100%;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  border-radius: 5px; /* Optional for rounded edges */
+  transition: background-color 0.3s, color 0.3s; /* Smooth hover effect */
+}
+
+.nav-item:hover {
+  background-color: #006a60 !important;
+  color: #fff !important;
+  cursor: pointer;
+}
+
+.nav-link {
+  color: black !important;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: #fff !important;
+}
+.stat-card {
+  display: flex;
+  justify-content: space-around;
+  width: 17rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+.stat-card p {
+  font-size: large;
+}
+.no-border {
+  border: none !important; /* Remove the border */
+  outline: none !important; /* Remove focus outline */
+  box-shadow: none !important; /* Remove shadow */
+  background-color: transparent; /* Keep background transparent */
+}
