@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Product from "./Product";
+import ProductDetail from "./ProductDetail";
 const Navs = () => {
   const navigation = useNavigate();
   const [activeContent, setActiveContent] = useState("Dashboard");
@@ -42,7 +43,7 @@ const Navs = () => {
       case "AddProduct":
         return <Product toggleSidebar={toggleSidebar} />;
       case "ProductDetails":
-        return <div>ProductDetails</div>;
+        return <ProductDetail toggleSidebar={toggleSidebar} />;
       case "Setting":
         return <div>Setting</div>;
       default:

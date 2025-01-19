@@ -12,7 +12,7 @@ const productSchema = new mongoose.Schema({
   images: { type: [String], required: true },
   status: {
     type: String,
-    enum: ["active", "inactive", "out of stock"],
+    enum: ["active", "out of stock"],
     default: "active",
   },
   createdAt: { type: Date, default: Date.now },

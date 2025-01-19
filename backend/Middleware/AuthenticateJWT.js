@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const authenticateJWT =
+const AuthenticateJWT =
   (roles = []) =>
   (req, res, next) => {
     const token =
@@ -26,4 +26,4 @@ const authenticateJWT =
     });
   };
 
-export { authenticateJWT };
+export { AuthenticateJWT };

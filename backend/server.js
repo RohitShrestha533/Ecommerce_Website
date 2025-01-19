@@ -3,16 +3,23 @@ import cors from "cors";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dotenv from "dotenv";
-// import userRoutes from "./Routes/UserRoute.js";
-// import { AdminRoute } from "./Routes/AdminRoute";
 import AdminRoutes from "./Routes/AdminRoute.js";
 import { ConnectDB } from "./Database/ConnectDB.js";
-// import { Admin } from "./Models/Admin.js";
-// import { User } from "./Models/User.js";
+
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Get current directory from the file URL
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Now use __dirname for static files
+
 dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Generate OTP function
 function generateOTP() {

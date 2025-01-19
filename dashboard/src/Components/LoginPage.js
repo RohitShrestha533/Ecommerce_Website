@@ -38,7 +38,7 @@ const LoginPage = () => {
       if (status === 200) {
         localStorage.setItem("admintoken", token);
         alert("Login successful");
-        navigate("/navs", { replace: true });
+        navigate("/nav");
       } else {
         setError(message);
       }

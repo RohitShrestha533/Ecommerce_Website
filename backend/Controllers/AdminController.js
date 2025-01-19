@@ -80,7 +80,7 @@ export const adminLogin = async (req, res) => {
       const token = jwt.sign(
         { adminId: admin._id, role: "admin" },
         process.env.JWT_SECRET_KEY,
-        { expiresIn: "1h" }
+        { expiresIn: "1d" }
       );
       res.status(200).send({
         status: 200,
@@ -167,3 +167,180 @@ export const addproduct = (req, res) => {
     }
   });
 };
+
+export const productsdetail = async (req, res) => {
+  try {
+    const products = await Product.find();
+
+    if (products.length === 0) {
+      return res.status(200).json({
+        message: "No products found",
+        data: [],
+      });
+    }
+    // console.log(products);
+    return res.status(200).json({
+      message: "Products fetched successfully",
+      data: products,
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+export const updateproductdetail = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const prod = req.body;
+    console.log(prod);
+    const { name, price, stockQuantity, status, description } = prod;
+    console.log("hoii", name, price, stockQuantity, status, description);
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+        name,
+        price,
+        stockQuantity,
+        status,
+        description,
+      },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res.status(200).json({
+      message: "Product updated successfully",
+      data: updatedProduct,
+    });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return res
+      .status(500)
+      .json({ message: "Server error. Could not update product." });
+  }
+};
+
+export const updateproductimage = async (req, res) => {
+  let imagePaths = [];
+  console.log("giot it");
+  upload(req, res, async (err) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ message: "Error uploading images: " + err.message });
+    }
+
+    // If files are uploaded, map their paths
+    imagePaths = req.files ? req.files.map((file) => file.path) : [];
+  });
+
+  try {
+    const { id } = req.params;
+
+    // Fetch the product by ID to get the current images
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // If no new images were uploaded, use the existing images
+    const updatedImages =
+      imagePaths.length > 0
+        ? [...product.images, ...imagePaths]
+        : product.images;
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+        images: updatedImages,
+      },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      message: "Product image updated successfully",
+      data: updatedProduct,
+    });
+  } catch (error) {
+    console.error("Error updating product image:", error);
+    return res
+      .status(500)
+      .json({ message: "Server error. Could not update product image." });
+  }
+};
+
+// export const updateproductdetail = async (req, res) => {
+//   let imagePaths = [];
+
+//   // Make sure that the formData is parsed correctly
+//   const productDetails = JSON.parse(req.body.productDetails); // Parse the JSON string from req.body
+
+//   // Extract product data from the parsed productDetails
+//   const { name, price, description, stockQuantity, category, status } =
+//     productDetails;
+//   console.log(productDetails);
+//   console.log(name, price, description, stockQuantity);
+//   try {
+//     // First handle the file upload, multer will process it in the 'upload' middleware
+//     upload(req, res, async (err) => {
+//       if (err) {
+//         return res
+//           .status(500)
+//           .send({ message: "Error uploading images: " + err.message });
+//       }
+
+//       // If files are uploaded, map their paths
+//       imagePaths = req.files ? req.files.map((file) => file.path) : [];
+
+//       // If the upload is successful, now proceed with updating the product
+//       const { id } = req.params;
+
+//       // Fetch the product by ID to get the current images
+//       const product = await Product.findById(id);
+
+//       if (!product) {
+//         return res.status(404).json({ message: "Product not found" });
+//       }
+
+//       // If no new images were uploaded, use the existing images
+//       const updatedImages =
+//         imagePaths.length > 0
+//           ? [...product.images, ...imagePaths]
+//           : product.images;
+
+//       // Update the product details
+//       const updatedProduct = await Product.findByIdAndUpdate(
+//         id,
+//         {
+//           name,
+//           price,
+//           stockQuantity,
+//           status,
+//           images: updatedImages, // Append new images if any, else retain old images
+//           description,
+//           category,
+//         },
+//         { new: true } // Return the updated product
+//       );
+
+//       // Return the updated product with success message
+//       return res.status(200).json({
+//         message: "Product updated successfully",
+//         data: updatedProduct,
+//       });
+//     });
+//   } catch (error) {
+//     console.error("Error updating product:", error);
+//     return res
+//       .status(500)
+//       .json({ message: "Server error. Could not update product." });
+//   }
+// };
