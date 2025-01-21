@@ -100,7 +100,7 @@ const CustomNavbar = () => {
             <FaShoppingCart />
             <span className="cart-badge">2</span>
           </Link>
-          <Link to="/account">
+          <Link to="/register">
             <FaUser />
           </Link>
         </Nav>

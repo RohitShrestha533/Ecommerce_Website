@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, default: null },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phone: { type: String, default: null },
@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     type: [String],
     default: ["buyer"],
   },
-  address: { type: String, required: true },
+  address: { type: String, default: null },
   orderHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
   profilePicture: { type: String, default: null },
   createdAt: { type: Date, default: Date.now },

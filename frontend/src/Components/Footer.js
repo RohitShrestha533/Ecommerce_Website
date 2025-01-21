@@ -4,7 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap Icons
 
 function Footer() {
   return (
-    <footer className="bg-dark text-white pt-4 w-100">
+    <footer className="bg-dark text-white pt-4 w-100 mt-auto">
       <div className="container">
         <div className="row">
           <div className="col-md-12 text-center mb-3">
@@ -25,16 +25,16 @@ function Footer() {
         <div className="row mt-4">
           <div className="col-12 col-md-3 col-sm-6 text-center mb-3 mb-md-0">
             <div className="d-flex justify-content-center">
-              <a href="#" className="text-white mx-2 text-decoration-none">
+              <a href="/" className="text-white mx-2 text-decoration-none">
                 <i className="bi bi-facebook text-white"></i>
               </a>
-              <a href="#" className="text-white mx-2 text-decoration-none">
+              <a href="/" className="text-white mx-2 text-decoration-none">
                 <i className="bi bi-twitter"></i>
               </a>
-              <a href="#" className="text-white mx-2 text-decoration-none">
+              <a href="/" className="text-white mx-2 text-decoration-none">
                 <i className="bi bi-instagram"></i>
               </a>
-              <a href="#" className="text-white mx-2 text-decoration-none">
+              <a href="/" className="text-white mx-2 text-decoration-none">
                 <i className="bi bi-envelope"></i>
               </a>
             </div>
@@ -45,17 +45,17 @@ function Footer() {
             <h5>Products</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/" className="text-white text-decoration-none">
                   New products
                 </a>
               </li>
               <li>
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/" className="text-white text-decoration-none">
                   Best sales
                 </a>
               </li>
               <li>
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/" className="text-white text-decoration-none">
                   Contact us
                 </a>
               </li>
@@ -67,27 +67,27 @@ function Footer() {
             <h5>Our Company</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/" className="text-white text-decoration-none">
                   Delivery
                 </a>
               </li>
               <li>
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/" className="text-white text-decoration-none">
                   Legal Notice
                 </a>
               </li>
               <li>
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/" className="text-white text-decoration-none">
                   Terms and Conditions
                 </a>
               </li>
               <li>
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/" className="text-white text-decoration-none">
                   About us
                 </a>
               </li>
               <li>
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/" className="text-white text-decoration-none">
                   Secure Payment
                 </a>
               </li>

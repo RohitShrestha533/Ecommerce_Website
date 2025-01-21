@@ -1,4 +1,7 @@
+import bcrypt from "bcrypt";
+const saltRounds = 10;
 import { Product } from "../Models/Product.js";
+import { User } from "../Models/User.js";
 export const productsdetail = async (req, res) => {
   try {
     const products = await Product.find();
@@ -21,34 +24,31 @@ export const productsdetail = async (req, res) => {
     });
   }
 };
+export const userRegister = async (req, res) => {
+  const { email, password, confirmPassword } = req.body;
 
-// Search products based on query and category
-// export const searchproduct = async (req, res) => {
-//   try {
-//     const { query, category } = req.query;
+  if (password != confirmPassword) {
+    return res.status(400).send({ message: "Passwords do not match." });
+  }
+  const oldUser = await User.findOne({ email: email });
 
-//     const searchQuery = {};
+  if (oldUser) {
+    return res.status(400).send({ message: "user already exist" });
+  }
 
-//     if (query) {
-//       searchQuery.name = { $regex: query, $options: "i" };
-//     }
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-//     if (category && category !== "all") {
-//       searchQuery.category = category;
-//     }
+  try {
+    await User.create({
+      email: email,
+      password: hashedPassword,
+    });
+    res.status(200).send({ status: "ok", data: "User Created" });
+  } catch (error) {
+    res.status(500).send({ status: "error", message: error.message });
+  }
+};
 
-//     // Find matching products
-//     const products = await Product.find(searchQuery);
-
-//     if (!products) {
-//       return res.status(404).json({ message: "No products found" });
-//     }
-//     res.status(200).json({ data: products });
-//   } catch (error) {
-//     console.error("Error fetching products:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
 export const searchproduct = async (req, res) => {
   try {
     const { query, category } = req.query;
