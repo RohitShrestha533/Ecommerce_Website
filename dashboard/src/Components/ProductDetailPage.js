@@ -1,19 +1,6 @@
 import React from "react";
-// import { useLocation } from "react-router-dom";
-// import Nav from "./Nav";
+
 const ProductDetailPage = (selectedProduct) => {
-  //   const location = useLocation();
-
-  //   const [sidebarVisible, setSidebarVisible] = useState(true);
-  //   const { product } = location.state || {};
-  //   const { product } = selectedProduct;
-
-  //   if (!product) {
-  //     return <div>Product data not found.</div>;
-  //   }
-  //   const toggleSidebar = () => {
-  //     setSidebarVisible(!sidebarVisible); // Toggle sidebar visibility
-  //   };
   return (
     <div>
       {/* {sidebarVisible && <Nav />} */}

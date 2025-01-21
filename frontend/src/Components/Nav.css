@@ -1,0 +1,27 @@
+/* Nav.css */
+.category-dropdown {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.search-input {
+  width: 200px;
+}
+
+.utility-icons .nav-link {
+  font-size: 1.5rem;
+}
+.search-input:focus {
+  /* border: none; */
+  box-shadow: none;
+}
+.cart-badge {
+  position: absolute;
+  /* top: -5px;
+  right: -5px; */
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 0.8rem;
+}

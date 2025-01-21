@@ -4,16 +4,14 @@ import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dotenv from "dotenv";
 import AdminRoutes from "./Routes/AdminRoute.js";
+import UserRoutes from "./Routes/UserRoute.js";
 import { ConnectDB } from "./Database/ConnectDB.js";
-
 import path from "path";
 import { fileURLToPath } from "url";
 
 // Get current directory from the file URL
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Now use __dirname for static files
 
 dotenv.config();
 const app = express();
@@ -80,7 +78,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/admin", AdminRoutes);
-// app.use("/user", userRoutes);
+app.use("/user", UserRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

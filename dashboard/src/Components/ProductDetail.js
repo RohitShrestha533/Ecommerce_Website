@@ -6,7 +6,7 @@ const ProductDetail = ({ toggleSidebar }) => {
   const [productDetails, setProductDetails] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState(null); // To hold the selected product
-  const itemsPerPage = 2; // Number of items per page
+  const itemsPerPage = 5; // Number of items per page
   const [tempImages, setTempImages] = useState([]); // Temporary images state
 
   const [isEditing, setIsEditing] = useState(false);
@@ -274,8 +274,8 @@ const ProductDetail = ({ toggleSidebar }) => {
         <div className="container  p-4 m-4 ">
           <div className="row ">
             <div
-              className="col-10 card col-sm-6 col-md-6 col-lg-4 m-3 p-0"
-              style={{ height: "400px" }}
+              className="col-10 justify-center card col-sm-10 col-md-10 col-lg-4 m-3 p-0"
+              style={{ height: "auto" }}
             >
               {selectedProduct.images && selectedProduct.images.length > 0 ? (
                 <img
@@ -297,8 +297,8 @@ const ProductDetail = ({ toggleSidebar }) => {
               )}
             </div>
             <div
-              className="col-10 col-sm-6 col-md-6 col-lg-7 bg-white m-3 p-2"
-              style={{ height: "400px", borderRadius: "8px" }}
+              className="col-10 col-sm-10 col-md-10 col-lg-7 bg-white m-3 p-2"
+              style={{ height: "auto", borderRadius: "8px" }}
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <h2 className="fw-bolder m-2">Product Details</h2>

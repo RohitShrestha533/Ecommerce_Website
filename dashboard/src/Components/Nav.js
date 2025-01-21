@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Product from "./Product";
 import ProductDetail from "./ProductDetail";
+import CarouselImage from "./CaraouselImage";
 const Navs = () => {
   const navigation = useNavigate();
   const [activeContent, setActiveContent] = useState("Dashboard");
@@ -44,6 +45,8 @@ const Navs = () => {
         return <Product toggleSidebar={toggleSidebar} />;
       case "ProductDetails":
         return <ProductDetail toggleSidebar={toggleSidebar} />;
+      case "CarouselImage":
+        return <CarouselImage />;
       case "Setting":
         return <div>Setting</div>;
       default:
@@ -134,6 +137,14 @@ const Navs = () => {
             >
               <button className="nav-link  btn btn-link">
                 <i className="bi bi-cart-fill pe-2"></i> Product Details
+              </button>
+            </li>
+            <li
+              className="nav-item "
+              onClick={() => setActiveContent("CarouselImage")}
+            >
+              <button className="nav-link  btn btn-link">
+                <i className="bi bi-cart-fill pe-2"></i> Carousel Image
               </button>
             </li>
 

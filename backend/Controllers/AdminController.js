@@ -6,6 +6,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { Product } from "../Models/Product.js";
+import { Carousel } from "../Models/Carousel.js";
 
 // const userToken = jwt.sign(
 //   { userId: user._id, role: "user" },
@@ -167,7 +168,31 @@ export const addproduct = (req, res) => {
     }
   });
 };
+export const Carouselimg = async (req, res) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ message: "Error uploading images: " + err.message });
+    }
 
+    const imagePaths = req.files ? req.files.map((file) => file.path) : [];
+    if (imagePaths.length === 0) {
+      return res.status(400).send({ message: "No images uploaded." });
+    }
+    try {
+      const newCarousel = new Carousel({
+        images: imagePaths,
+      });
+
+      await newCarousel.save();
+      res.status(200).json({ message: "Carousel Image added successfully!" });
+    } catch (error) {
+      console.error("Error saving Carousel Image:", error);
+      res.status(500).json({ message: "Error saving Carousel Image." });
+    }
+  });
+};
 export const productsdetail = async (req, res) => {
   try {
     const products = await Product.find();
@@ -178,13 +203,36 @@ export const productsdetail = async (req, res) => {
         data: [],
       });
     }
-    // console.log(products);
+    console.log(products);
     return res.status(200).json({
       message: "Products fetched successfully",
       data: products,
     });
   } catch (error) {
     console.error("Error fetching products:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+export const carouselsdetail = async (req, res) => {
+  try {
+    const carouselsimage = await Carousel.find();
+
+    if (carouselsimage.length === 0) {
+      return res.status(200).json({
+        message: "No carousels image found",
+        data: [],
+      });
+    }
+    console.log(carouselsimage);
+    return res.status(200).json({
+      message: "Products fetched successfully",
+      carouselsimage,
+    });
+  } catch (error) {
+    console.error("Error fetching carousels image:", error);
     return res.status(500).json({
       message: "Internal Server Error",
       error: error.message,
