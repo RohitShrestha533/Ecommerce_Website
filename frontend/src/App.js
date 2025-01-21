@@ -10,6 +10,7 @@ import ProductLanding from "./Components/ProductLanding";
 import SearchedItem from "./Components/SearchedItem"; // Example searched item page
 import Error from "./Components/Error"; // Assuming this is your error boundary
 import Footer from "./Components/Footer";
+import Digital from "./Components/Digital";
 
 function App() {
   return (
@@ -25,23 +26,24 @@ function App() {
         }}
       >
         <Error>
-          <div className="childAPP" style={{ width: "80%" }}>
+          <div style={{ width: "80%" }}>
             <CustomNavbar />
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <>
-                    {/*  The home page section */}
-                    <ProductLanding />
-                    <Herosection />
-                    <Feature />
-                  </>
-                }
-              />
-              <Route path="/searcheditem" element={<SearchedItem />} />
-            </Routes>
           </div>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  {/*  The home page section */}
+                  <Herosection style={{ width: "100%" }} />
+                  <ProductLanding />
+                  <Digital style={{ width: "100%" }} />
+                  <Feature />
+                </>
+              }
+            />
+            <Route path="/searcheditem" element={<SearchedItem />} />
+          </Routes>
           <Footer style={{ width: "100%" }} />
         </Error>
       </div>

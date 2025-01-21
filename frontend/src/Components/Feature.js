@@ -29,7 +29,7 @@ const Feature = () => {
   }, []);
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid" style={{ width: "80%" }}>
       <h2 className="text-black my-5">Product Details</h2>
       {products.length > 0 ? (
         <Swiper

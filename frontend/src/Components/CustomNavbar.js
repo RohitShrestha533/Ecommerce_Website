@@ -48,7 +48,7 @@ const CustomNavbar = () => {
   };
 
   return (
-    <Navbar className="navbar p-3" expand="lg">
+    <Navbar className="navbar p-3 w-100" expand="lg">
       <Container fluid>
         <Navbar.Brand href="/" className="fw-bold">
           PUSPA JHUKEGA NAHI

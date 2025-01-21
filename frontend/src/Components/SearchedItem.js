@@ -64,10 +64,13 @@ const SearchedItem = () => {
   };
 
   return (
-    <Container className="my-4">
-      <h1>
-        Search Results for "{query}" in Category: {category}
-      </h1>
+    <Container className="my-4 pb-4 mb-5">
+      {!loading}
+      {
+        <h1 style={{ color: "black", marginBottom: "2rem" }}>
+          Search Results for "{query}" in Category: {category}
+        </h1>
+      }
 
       {loading ? (
         <Spinner animation="border" role="status">
@@ -80,15 +83,20 @@ const SearchedItem = () => {
           {searchproducts.length > 0 ? (
             searchproducts.map((product) => (
               <Col key={product._id}>
-                <Card>
+                <Card
+                  style={{
+                    height: "500px",
+                    overflow: "hidden",
+                  }}
+                >
                   <Card.Img
                     variant="top"
                     src={`http://localhost:5000/${product.images[0]}`}
                     alt={product.name}
                     height="200"
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: "contain" }}
                   />
-                  <Card.Body>
+                  <Card.Body className="pb-5">
                     <Card.Title>{product.name}</Card.Title>
                     <Card.Text>{product.description}</Card.Text>
                     <Card.Text>Price: ₹{product.price}</Card.Text>

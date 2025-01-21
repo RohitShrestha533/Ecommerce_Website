@@ -53,6 +53,7 @@ const Herosection = () => {
     <div
       className="hero-section position-relative "
       style={{
+        width: "80%",
         backgroundColor: "white", // Set background color for the entire section
       }}
     >
