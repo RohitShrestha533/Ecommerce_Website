@@ -8,10 +8,8 @@ const LoginPage = () => {
   const navigation = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +19,6 @@ const LoginPage = () => {
     // Reset previous error messages
     setEmailError("");
     setPasswordError("");
-    setConfirmPasswordError("");
     setError("");
 
     // Basic validations
@@ -30,35 +27,23 @@ const LoginPage = () => {
       return;
     }
 
-    if (!password || !confirmPassword) {
+    if (!password) {
       setPasswordError("Password is required");
-      setConfirmPasswordError("Confirm Password is required");
       return;
     }
 
-    if (password !== confirmPassword) {
-      setPasswordError("Passwords do not match");
-      setConfirmPasswordError("Passwords do not match");
-      return;
-    }
-
-    // Clear password mismatch errors if fixed
-    if (password === confirmPassword) {
-      setPasswordError("");
-      setConfirmPasswordError("");
-    }
-
-    const userData = { email, password, confirmPassword };
+    const userData = { email, password };
 
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:5000/user/userRegister",
+        "http://localhost:5000/user/userLogin",
         userData
       );
-      const { status, message } = response.data;
+      const { status, message, token } = response.data;
 
       if (status === 200) {
+        localStorage.setItem("usertoken", token);
         alert("Login successful");
         navigation("/", { replace: true });
       } else {
@@ -136,30 +121,6 @@ const LoginPage = () => {
             </div>
             {passwordError && (
               <div className="text-danger">{passwordError}</div>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="confirmpassword" className="form-label">
-              Confirm Password
-            </label>
-            <div className="input-group">
-              <span className="input-group-text">
-                <Lock />
-              </span>
-              <input
-                id="confirmpassword"
-                type="password"
-                className="form-control"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                aria-label="Confirm Password"
-              />
-            </div>
-            {confirmPasswordError && (
-              <div className="text-danger">{confirmPasswordError}</div>
             )}
           </div>
 

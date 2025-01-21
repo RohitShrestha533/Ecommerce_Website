@@ -48,7 +48,7 @@ const CustomNavbar = () => {
   };
 
   return (
-    <Navbar className="navbar p-3 w-100" expand="lg">
+    <Navbar className="navbar p-3 w-80" expand="lg">
       <Container fluid>
         <Navbar.Brand href="/" className="fw-bold">
           PUSPA JHUKEGA NAHI
@@ -100,7 +100,7 @@ const CustomNavbar = () => {
             <FaShoppingCart />
             <span className="cart-badge">2</span>
           </Link>
-          <Link to="/register">
+          <Link to="/login">
             <FaUser />
           </Link>
         </Nav>

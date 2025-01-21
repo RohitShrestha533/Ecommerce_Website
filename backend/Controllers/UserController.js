@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 const saltRounds = 10;
 import { Product } from "../Models/Product.js";
 import { User } from "../Models/User.js";
+import jwt from "jsonwebtoken";
+
 export const productsdetail = async (req, res) => {
   try {
     const products = await Product.find();
@@ -44,6 +46,43 @@ export const userRegister = async (req, res) => {
       password: hashedPassword,
     });
     res.status(200).send({ status: "ok", data: "User Created" });
+  } catch (error) {
+    res.status(500).send({ status: "error", message: error.message });
+  }
+};
+export const userLogin = async (req, res) => {
+  const { email, password } = req.body;
+  let user;
+  let role = "user";
+
+  user = await User.findOne({ email: email });
+
+  if (!user) {
+    return res.status(404).send({ message: "User not found" });
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordCorrect) {
+    return res.status(400).send({ message: "Incorrect password" });
+  }
+
+  try {
+    if (user && isPasswordCorrect) {
+      const token = jwt.sign(
+        { userId: user._id, role: "user" },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: "1d" }
+      );
+
+      res.status(200).send({
+        status: 200,
+        message: "Login successful",
+        token,
+      });
+    } else {
+      res.status(400).send({ status: 400, message: "Invalid credentials" });
+    }
   } catch (error) {
     res.status(500).send({ status: "error", message: error.message });
   }
