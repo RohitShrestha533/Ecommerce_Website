@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Container, Button } from "react-bootstrap";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const Herosection = () => {
   const [productImages, setProductImages] = useState([]); // To store all product images
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Current image index for cycling
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch product data and extract images
   useEffect(() => {
@@ -91,7 +93,7 @@ const Herosection = () => {
       >
         <h1 className="display-4 fw-bold">Discover Artisanal Treasures</h1>
         <p className="lead">Explore Unique Handcrafted Creations</p>
-        <Button variant="light" size="lg">
+        <Button variant="light" size="lg" onClick={() => navigate("/product")}>
           Shop Now
         </Button>
       </Container>

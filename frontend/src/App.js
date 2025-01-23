@@ -1,14 +1,16 @@
 import React, { Suspense, lazy, useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import CustomNavbar from "./Components/CustomNavbar";
 import Footer from "./Components/Footer";
 import Error from "./Components/Error";
 import Scrolltotop from "./Components/Scrolltotop";
 import axios from "axios";
-
+import Explore from "./Components/Explore";
+import HowToGetStarted from "./Components/HowToGetStarted";
 const Herosection = lazy(() => import("./Components/Herosection"));
 const Feature = lazy(() => import("./Components/Feature"));
 const ProductLanding = lazy(() => import("./Components/ProductLanding"));
@@ -81,10 +83,11 @@ function App() {
                 element={
                   <>
                     <Herosection />
-                    <ProductLanding />
-                    <Digital />
+                    <Explore style={{ width: "80%" }} />
                     <Feature />
-                    <Productdetail />
+                    <Digital />
+                    <ProductLanding />
+                    <HowToGetStarted />
                   </>
                 }
               />
