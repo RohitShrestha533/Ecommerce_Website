@@ -1,3 +1,12 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: #e4e4e4;
+  width: 100%;
+  align-items: center;
+}
+
 .hero-section {
   position: relative;
   height: 100vh; /* Full-screen height */
@@ -13,4 +22,14 @@
 
 .hero-section .position-absolute {
   z-index: 2;
+}
+
+/* Ensure the left-side image scrolls only till the end of the right-side content */
+.position-sticky {
+  position: sticky;
+  height: fit-content;
+}
+
+.overflow-auto {
+  overflow-y: auto;
 }

@@ -16,12 +16,24 @@
 //         style={{
 //           display: "flex",
 //           whiteSpace: "nowrap",
+//           color: "white",
 //           backgroundColor: "black",
-//           animation: "moveText 5s linear infinite",
+//           animation: "moveText 15s linear infinite",
 //         }}
 //       >
-//         <h1 style={{ lineHeight: "10rem", fontSize: "100px" }}>
-//           <span style={{ padding: "0 0.2rem", fontWeight: "bolder" }}>
+//         {/* Duplicate the text for seamless scrolling */}
+//         <h1
+//           style={{
+//             fontSize: "100px",
+//             lineHeight: "10rem",
+//             fontWeight: "bolder",
+//             margin: 0,
+//           }}
+//         >
+//           <span style={{ marginRight: "2rem", letterSpacing: "0.5rem" }}>
+//             SERVICING LOCAL NEPALI PRODUCTS TO THE WORLD MADE IN NEPAL
+//           </span>
+//           <span style={{ marginRight: "2rem", letterSpacing: "0.5rem" }}>
 //             SERVICING LOCAL NEPALI PRODUCTS TO THE WORLD MADE IN NEPAL
 //           </span>
 //         </h1>
@@ -65,7 +77,7 @@ const Digital = () => {
           whiteSpace: "nowrap",
           color: "white",
           backgroundColor: "black",
-          animation: "moveText 10s linear infinite",
+          animation: "moveText 15s linear infinite",
         }}
       >
         {/* Duplicate the text for seamless scrolling */}
@@ -76,6 +88,7 @@ const Digital = () => {
             fontWeight: "bolder",
             margin: 0,
           }}
+          className="scrolling-text"
         >
           <span style={{ marginRight: "2rem", letterSpacing: "0.5rem" }}>
             SERVICING LOCAL NEPALI PRODUCTS TO THE WORLD MADE IN NEPAL
@@ -94,6 +107,23 @@ const Digital = () => {
             }
             100% {
               transform: translateX(-50%);
+            }
+          }
+          
+          /* Adjust font size for small screens */
+          @media (max-width: 768px) {
+            .scrolling-text {
+              font-size: 40px;
+              line-height: 5rem;
+            fontWeight: "unset",
+            }
+          }
+          
+          @media (max-width: 480px) {
+            .scrolling-text {
+              font-size: 30px;
+              line-height: 3.5rem;
+            fontWeight: "unset",
             }
           }
         `}

@@ -34,7 +34,7 @@ const App = () => {
           }
         />
 
-        <Route path="/" element={<ProductDetail />} />
+        <Route path="/" element={<Nav />} />
         <Route path="/product-detail" element={<ProductDetailPage />} />
         <Route path="*" element={<Navigate to={token ? "/nav" : "/login"} />} />
       </Routes>

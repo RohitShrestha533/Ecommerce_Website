@@ -13,8 +13,9 @@ import {
 import { FaSearch, FaUser, FaShoppingCart } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom"; // Import useNavigate from react-router-dom
 import "./Nav.css";
+import axios from "axios";
 
-const CustomNavbar = () => {
+const CustomNavbar = ({ cartCount, updateCartCount }) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate(); // Initialize navigate
@@ -46,9 +47,33 @@ const CustomNavbar = () => {
     navigate(`/searcheditem?query=${searchQuery}&category=${selectedCategory}`);
     setSearchQuery("");
   };
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("usertoken");
 
+      if (token) {
+        await axios.post(
+          "http://localhost:5000/user/userLogout",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        localStorage.removeItem("usertoken");
+        navigate("/login");
+        alert("Logged out successfully");
+      } else {
+        alert("No token found, user might already be logged out.");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+      alert("Failed to log out. Please try again.");
+    }
+  };
   return (
-    <Navbar className="navbar p-3 w-80" expand="lg">
+    <Navbar className="navbar p-3 " expand="lg">
       <Container fluid>
         <Navbar.Brand href="/" className="fw-bold">
           PUSPA JHUKEGA NAHI
@@ -78,7 +103,7 @@ const CustomNavbar = () => {
               <FormControl
                 type="text"
                 placeholder="Search"
-                className="me-2 search-input"
+                className="me-2 search-input "
                 aria-label="Search"
                 value={searchQuery} // Bind search query to form input
                 onChange={handleSearchChange} // Update search query state
@@ -96,13 +121,16 @@ const CustomNavbar = () => {
         </Nav>
 
         <Nav className="ms-auto utility-icons align-items-center gap-4">
-          <Link to="/cart" className="position-relative">
+          <Link to="/ShoppingCart" className="position-relative">
             <FaShoppingCart />
-            <span className="cart-badge">2</span>
+            <span className="cart-badge">{cartCount}</span>
           </Link>
           <Link to="/login">
             <FaUser />
           </Link>
+          <button type="button" onClick={handleLogout}>
+            LOGOUT
+          </button>
         </Nav>
       </Container>
     </Navbar>

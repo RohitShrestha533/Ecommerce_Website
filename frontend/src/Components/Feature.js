@@ -4,8 +4,10 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay } from "swiper"; // Corrected import for Swiper v8+
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Feature = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -27,10 +29,13 @@ const Feature = () => {
 
     fetchProducts();
   }, []);
+  const handleProductClick = (product) => {
+    navigate("/productdetail", { state: { product } });
+  };
 
   return (
     <div className="container-fluid" style={{ width: "80%" }}>
-      <h2 className="text-black my-5">Product Details</h2>
+      <h2 className="text-black my-5">Featuring Product</h2>
       {products.length > 0 ? (
         <Swiper
           spaceBetween={20} // Reduced space between slides for small screens
@@ -52,11 +57,12 @@ const Feature = () => {
           {products.map((product, index) => (
             <SwiperSlide key={index}>
               <div
-                className="col text-black m-3 p-2"
+                className="col text-black m-3 p-3"
                 style={{
                   borderRadius: "8px",
                   backgroundColor: "white", // Add background color for each slide
                 }}
+                onClick={() => handleProductClick(product)}
               >
                 <div
                   style={{

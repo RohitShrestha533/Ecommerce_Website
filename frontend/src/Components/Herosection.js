@@ -65,7 +65,7 @@ const Herosection = () => {
             width: "100%",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "white", // Set background color for the div containing the image
+            backgroundColor: "#E4E4E4", // Set background color for the div containing the image
           }}
         >
           <img

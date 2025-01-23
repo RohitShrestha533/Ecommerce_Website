@@ -4,7 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap Icons
 
 function Footer() {
   return (
-    <footer className="bg-dark text-white pt-4 w-100 mt-auto">
+    <footer className="bg-dark text-white pt-4 w-100 mt-auto ">
       <div className="container">
         <div className="row">
           <div className="col-md-12 text-center mb-3">

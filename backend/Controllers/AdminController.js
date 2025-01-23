@@ -203,7 +203,7 @@ export const productsdetail = async (req, res) => {
         data: [],
       });
     }
-    console.log(products);
+    // console.log(products);
     return res.status(200).json({
       message: "Products fetched successfully",
       data: products,
@@ -226,7 +226,7 @@ export const carouselsdetail = async (req, res) => {
         data: [],
       });
     }
-    console.log(carouselsimage);
+    // console.log(carouselsimage);
     return res.status(200).json({
       message: "Products fetched successfully",
       carouselsimage,
@@ -244,9 +244,9 @@ export const updateproductdetail = async (req, res) => {
   try {
     const { id } = req.params;
     const prod = req.body;
-    console.log(prod);
+    // console.log(prod);
     const { name, price, stockQuantity, status, description } = prod;
-    console.log("hoii", name, price, stockQuantity, status, description);
+    // console.log("hoii", name, price, stockQuantity, status, description);
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
       {
@@ -277,7 +277,7 @@ export const updateproductdetail = async (req, res) => {
 
 export const updateproductimage = async (req, res) => {
   let imagePaths = [];
-  console.log("giot it");
+  // console.log("giot it");
   upload(req, res, async (err) => {
     if (err) {
       return res
