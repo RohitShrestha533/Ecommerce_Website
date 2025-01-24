@@ -79,7 +79,10 @@ const Productdetail = ({ updateCartCount }) => {
     }
   };
   return (
-    <div className="container my-5">
+    <div
+      className="container my-5"
+      style={{ minHeight: "90vh", marginTop: "60px" }}
+    >
       <div className="row">
         {/* Left side - Main Image with Slider */}
         <div

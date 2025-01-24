@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Loader } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 
-const LoginPage = () => {
-  const navigation = useNavigate();
+const LoginPage = ({ setIsLoggedIn, isLoggedIn, updateCartCount }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -45,7 +44,10 @@ const LoginPage = () => {
       if (status === 200) {
         localStorage.setItem("usertoken", token);
         alert("Login successful");
-        navigation("/", { replace: true });
+        setIsLoggedIn(true);
+
+        updateCartCount();
+        return <Navigate to="/" replace />;
       } else {
         setError(message);
       }
@@ -57,6 +59,9 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <motion.div

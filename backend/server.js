@@ -3,6 +3,7 @@ import cors from "cors";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dotenv from "dotenv";
+import { User } from "./Models/User.js";
 import AdminRoutes from "./Routes/AdminRoute.js";
 import UserRoutes from "./Routes/UserRoute.js";
 import { ConnectDB } from "./Database/ConnectDB.js";
@@ -51,8 +52,8 @@ const sendOTP = (email, otp) => {
 let otpStorage = {}; // This will hold the OTP temporarily (usually you store this in a database)
 app.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
-  const admin = await Admin.findOne({ email });
-  if (!admin) {
+  const user = await User.findOne({ email });
+  if (!user) {
     return res.status(404).send({ message: "User not found" });
   }
   const otp = generateOTP();

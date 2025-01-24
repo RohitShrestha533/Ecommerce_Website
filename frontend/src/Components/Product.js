@@ -119,7 +119,7 @@ const Product = () => {
   return (
     <div
       className="container-fluid align-content-center"
-      style={{ width: "80%" }}
+      style={{ width: "80%", minHeight: "90vh" }}
     >
       <h2 className="text-black my-5">Product Details</h2>
       <div className="row d-flex flex-wrap justify-content-start">

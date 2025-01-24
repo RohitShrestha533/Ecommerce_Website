@@ -4,6 +4,7 @@ import { Product } from "../Models/Product.js";
 import { User } from "../Models/User.js";
 import { Cart } from "../Models/Cart.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 export const productsdetail = async (req, res) => {
   try {
     const products = await Product.find();
@@ -27,11 +28,8 @@ export const productsdetail = async (req, res) => {
   }
 };
 export const userRegister = async (req, res) => {
-  const { email, password, confirmPassword } = req.body;
+  const { name, email, password } = req.body;
 
-  if (password != confirmPassword) {
-    return res.status(400).send({ message: "Passwords do not match." });
-  }
   const oldUser = await User.findOne({ email: email });
 
   if (oldUser) {
@@ -42,6 +40,7 @@ export const userRegister = async (req, res) => {
 
   try {
     await User.create({
+      name,
       email: email,
       password: hashedPassword,
     });
@@ -132,37 +131,59 @@ export const searchproduct = async (req, res) => {
 
 export const cartdetail = async (req, res) => {
   try {
-    // Fetch the user's cart by their user ID and only active carts
+    // Fetch the active cart for the user
     const cart = await Cart.findOne({
       user: req.user.userId,
       status: "active",
     }).populate({
-      path: "items.product", // Make sure 'product' is the reference to the Product schema
-      select: "name price images", // Fetch only necessary fields from Product model
+      path: "items.product",
+      model: "Product", // Ensure this matches your Product model name
+      select: "name price images",
     });
 
-    if (!cart) {
+    // console.log(cart); // Log the populated cart to check if product details are there
+
+    if (!cart || cart.items.length === 0) {
       return res.status(404).json({ message: "Cart is empty." });
     }
 
-    // Extract the items from the cart to match the structure expected by the frontend
-    const cartItems = cart.items.map((item) => ({
-      id: item.product._id,
-      name: item.product.name,
-      price: item.product.price,
-      quantity: item.quantity,
-      image: item.product.images[0], // Assuming images is an array and you're using the first image
-    }));
-    // console.log(cartItems);
-    res.status(200).json({
-      message: "Cart retrieved successfully.",
-      data: cartItems, // Send only the necessary fields to the frontend
-    });
+    // Log the cart to inspect its structure
+    // console.log(cart);
+
+    // Map over the items and extract necessary details
+    const cartItems = cart.items
+      .map((item) => {
+        if (!item.product) {
+          // Log a message if the product is missing
+          console.error("Missing product for cart item:", item);
+          return null; // Or return a default object with minimal information
+        }
+
+        return {
+          id: item.product._id,
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity,
+          image:
+            item.product.images && item.product.images.length > 0
+              ? item.product.images[0]
+              : null, // Safely get image
+        };
+      })
+      .filter((item) => item !== null); // Filter out any null values (in case some items were missing products)
+
+    // If there are no valid cart items after filtering
+    if (cartItems.length === 0) {
+      return res.status(404).json({ message: "No valid items in the cart." });
+    }
+
+    res.status(200).json({ data: cartItems });
   } catch (error) {
     console.error("Error fetching cart:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to fetch cart.", error: error.message });
+    res.status(500).json({
+      message: "Failed to fetch cart.",
+      error: error.message || "Unknown error",
+    });
   }
 };
 
@@ -290,5 +311,74 @@ export const countProductsInCart = async (req, res) => {
       message: "Failed to count products in the cart.",
       error: error.message,
     });
+  }
+};
+export const changepassword = async (req, res) => {
+  const { email, newPassword } = req.body;
+  try {
+    console.log(email, newPassword);
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).send({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+};
+
+export const UpdateCart = async (req, res) => {
+  const userId = req.user.userId; // Assuming user ID is available from JWT or session
+  const cartItems = req.body.cartItems; // The cart items sent in the request
+
+  try {
+    // Map cart items to fetch product details and calculate totals
+    const updatedItems = await Promise.all(
+      cartItems.map(async (item) => {
+        const product = await Product.findById(item.id); // Find the product by ID
+
+        if (!product) {
+          throw new Error(`Product with ID ${item.id} not found`);
+        }
+
+        return {
+          product: product._id, // Reference the product by its _id
+          quantity: item.quantity,
+          price: product.price, // Get the price from the product
+          total: product.price * item.quantity, // Calculate total price for this item
+        };
+      })
+    );
+
+    // Find the user's existing cart, or create a new one
+    let cart = await Cart.findOne({ user: userId });
+
+    if (!cart) {
+      // If no cart exists, create a new one
+      cart = new Cart({
+        user: userId,
+        items: updatedItems,
+        totalPrice: updatedItems.reduce((acc, item) => acc + item.total, 0), // Calculate total cart price
+      });
+    } else {
+      // If cart exists, update the items and total price
+      cart.items = updatedItems;
+      cart.totalPrice = updatedItems.reduce((acc, item) => acc + item.total, 0); // Recalculate total price
+    }
+
+    // Save the updated cart
+    await cart.save();
+
+    res.status(200).json(cart); // Return the updated cart
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    res.status(400).json({ error: error.message }); // Send an error message if anything goes wrong
   }
 };

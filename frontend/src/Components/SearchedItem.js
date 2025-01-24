@@ -153,7 +153,10 @@ const SearchedItem = () => {
   }, [query, category]);
 
   return (
-    <Container className="my-4 pb-4 mb-5">
+    <Container
+      className="my-4 pb-4 mb-5"
+      style={{ minHeight: "90vh", marginTop: "60px" }}
+    >
       <h1 style={{ color: "black", marginBottom: "2rem" }}>
         Search Results for "{query}" in Category: {category}
       </h1>
