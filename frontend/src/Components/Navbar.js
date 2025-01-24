@@ -195,6 +195,54 @@ const Test = ({ cartCount, isLoggedIn, setIsLoggedIn, updateCartCount }) => {
                     <FaUser style={{ fontSize: "1.5rem" }} /> Profile
                   </Link>
                 </li>
+                <li className="nav-item text-dark dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="/"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    style={{ fontSize: "1.25rem" }}
+                  >
+                    <FaUser style={{ fontSize: "1.5rem" }} />
+                    Profile
+                  </a>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <a className="dropdown-item" href="/orderhistory">
+                        My Order History
+                      </a>
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="/">
+                        Another action
+                      </a>
+                    </li>
+                    <li>
+                      <hr className="dropdown-divider" />
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="/">
+                        Something else here
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                {/* <Dropdown>
+                  <Dropdown.Toggle
+                    variant="success"
+                    id="dropdown-custom-components"
+                  >
+                    Dropdown
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item href="#">Action</Dropdown.Item>
+                    <Dropdown.Item href="#">Another action</Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item href="#">Something else here</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown> */}
                 <li className="nav-item">
                   <Link
                     className="nav-link active d-flex align-items-center gap-2"

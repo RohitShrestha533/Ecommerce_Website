@@ -33,3 +33,18 @@ export const createOrder = async (req, res) => {
     res.status(500).json({ message: "Failed to place the order.", error });
   }
 };
+export const orderhistory = async (req, res) => {
+  try {
+    // Find orders associated with the logged-in user
+    const orders = await Order.find({ user: req.user.userId }).populate(
+      "items.product",
+      "name price images"
+    ); // Populate the product details
+    res
+      .status(200)
+      .json({ message: "Order history fetched successfully!", orders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch order history.", error });
+  }
+};

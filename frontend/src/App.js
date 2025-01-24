@@ -14,6 +14,7 @@ import Navbar from "./Components/Navbar";
 import SignupPage from "./Components/SignupPage";
 import ForgotPasswordPage from "./pages/ForgetPasswordPage";
 import CheckOutPage from "./pages/CheckOutPage";
+import OrderHistory from "./pages/OrderHistory";
 const Herosection = lazy(() => import("./Components/Herosection"));
 const Feature = lazy(() => import("./Components/Feature"));
 const ProductLanding = lazy(() => import("./Components/ProductLanding"));
@@ -114,6 +115,10 @@ const App = () => {
                 element={<RegisterPage isLoggedIn={isLoggedIn} />}
               />
               <Route
+                path="/orderhistory"
+                element={<OrderHistory style={{ width: "80%" }} />}
+              />
+              <Route
                 path="/"
                 element={
                   <>
@@ -121,6 +126,7 @@ const App = () => {
                     <Feature />
                     <Explore style={{ width: "80%" }} />
                     <Digital />
+                    <OrderHistory />
                     <ProductLanding />
                     <HowToGetStarted />
                   </>

@@ -43,10 +43,10 @@ const LoginPage = ({ setIsLoggedIn, isLoggedIn, updateCartCount }) => {
 
       if (status === 200) {
         localStorage.setItem("usertoken", token);
+        updateCartCount();
         alert("Login successful");
         setIsLoggedIn(true);
 
-        updateCartCount();
         return <Navigate to="/" replace />;
       } else {
         setError(message);
