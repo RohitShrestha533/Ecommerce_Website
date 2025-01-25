@@ -69,7 +69,7 @@ const CheckOutPage = () => {
 
       if (response.status === 200) {
         setOrderStatus("Order placed successfully!");
-        setTimeout(() => navigate("/order-confirmation"), 2000);
+        setTimeout(() => navigate("/orderhistory"), 2000);
       }
     } catch (error) {
       console.error("Checkout error:", error);

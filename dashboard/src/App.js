@@ -5,41 +5,62 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Nav from "./Components/Nav";
+import Navbar from "./Components/Navbar";
+import Footer from "./Components/Footer";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import Register from "./Components/Register";
+import Product from "./Components/Product";
+import CarouselImage from "./Components/CaraouselImage";
 import ProductDetail from "./Components/ProductDetail";
-import ProductDetailPage from "./Components/ProductDetailPage";
 import LoginPage from "./Components/LoginPage";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
-
+import Dashboard from "./pages/Dashboard";
+import { AuthProvider, useAuth } from "./context/AuthContext"; // Import the context
 import "./App.css";
-
 const App = () => {
-  const token = localStorage.getItem("admintoken");
+  const { authState } = useAuth(); // Use the auth state from context
 
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/nav" element={<Nav />} />
-        <Route
-          path="/nav/*"
-          element={
-            <ProtectedRoute isAuthenticated={!!token}>
-              <Nav />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route path="/" element={<Nav />} />
-        <Route path="/product-detail" element={<ProductDetailPage />} />
-        <Route path="*" element={<Navigate to={token ? "/nav" : "/login"} />} />
-      </Routes>
+      <div className="app-container">
+        {authState.token && <Navbar />} {/* Show Navbar if authenticated */}
+        <div className="content">
+          <Routes>
+            <Route path="/login" element={!authState.token && <LoginPage />} />
+            <Route
+              path="/register"
+              element={!authState.token && <Register />}
+            />
+            <Route path="/Product" element={<Product />} />
+            <Route path="/Dashboard" element={<Dashboard />} />
+            <Route
+              path="/ProductDetails"
+              element={<ProtectedRoute element={<ProductDetail />} />}
+            />
+            <Route path="/Carousel" element={<CarouselImage />} />
+            <Route path="/Setting" element={<Register />} />
+            <Route
+              path="/"
+              element={
+                authState.token ? (
+                  <Navigate to="/Product" />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+          </Routes>
+        </div>
+        {authState.token && <Footer />} {/* Show Footer if authenticated */}
+      </div>
     </Router>
   );
 };
 
-export default App;
+// Named component to wrap App with AuthProvider
+const AppWithProvider = () => (
+  <AuthProvider>
+    <App />
+  </AuthProvider>
+);
+
+export default AppWithProvider;

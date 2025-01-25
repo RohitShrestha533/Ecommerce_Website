@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,7 @@ const LoginPage = () => {
     password: "",
   });
 
+  const { setAuthState } = useAuth();
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -38,7 +40,8 @@ const LoginPage = () => {
       if (status === 200) {
         localStorage.setItem("admintoken", token);
         alert("Login successful");
-        navigate("/nav");
+        setAuthState({ token });
+        navigate("/Dashboard");
       } else {
         setError(message);
       }
@@ -59,7 +62,7 @@ const LoginPage = () => {
         justifyContent: "center",
         alignItems: "center",
         minHeight: "100vh",
-        backgroundColor: "#f1f1f1",
+        backgroundColor: "#e7e3ed",
       }}
     >
       <div

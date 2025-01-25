@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "react-bootstrap/Pagination";
-
-const ProductDetail = ({ toggleSidebar }) => {
+const ProductDetail = () => {
   const [productDetails, setProductDetails] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedProduct, setSelectedProduct] = useState(null); // To hold the selected product
-  const itemsPerPage = 5; // Number of items per page
-  const [tempImages, setTempImages] = useState([]); // Temporary images state
-
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [tempImages, setTempImages] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageCount, setImageCount] = useState(0);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 768);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const itemsPerPage = 5;
+  const handleNameClick = (item) => {
+    setSelectedProduct(item);
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -34,8 +42,52 @@ const ProductDetail = ({ toggleSidebar }) => {
     fetchProducts();
   }, []);
 
-  const handleNameClick = (product) => {
-    setSelectedProduct(product); // Set the selected product on click
+  useEffect(() => {
+    if (
+      selectedProduct &&
+      selectedProduct.images &&
+      selectedProduct.images.length > 0
+    ) {
+      setImageCount(selectedProduct.images.length);
+    }
+  }, [selectedProduct]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (imageCount > 1) {
+      const intervalId = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageCount);
+      }, 3000);
+      return () => clearInterval(intervalId);
+    }
+  }, [imageCount]);
+
+  const handleImageClick = (index) => {
+    setSelectedImageIndex(index);
+  };
+
+  const handlePrev = () => {
+    setSelectedImageIndex((prevIndex) =>
+      prevIndex === 0 ? selectedProduct.images.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNext = () => {
+    setSelectedImageIndex((prevIndex) =>
+      prevIndex === selectedProduct.images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const handleSaveClick = async () => {
@@ -46,25 +98,20 @@ const ProductDetail = ({ toggleSidebar }) => {
           formData.append(key, selectedProduct[key]);
         }
       });
+
       if (tempImages.length > 0) {
         Array.from(tempImages).forEach((image) => {
-          formData.append("images", image); // Append each image file
+          formData.append("images", image);
         });
       }
 
-      console.log(formData);
-      console.log(selectedProduct);
       const token = localStorage.getItem("admintoken");
+
       if (tempImages.length > 0) {
         const response = await axios.put(
-          `http://localhost:5000/admin/updateproductimage/${selectedProduct._id}`, // Assuming the product ID is available
+          `http://localhost:5000/admin/updateproductimage/${selectedProduct._id}`,
           formData,
-
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         if (response.status === 200) {
@@ -75,13 +122,14 @@ const ProductDetail = ({ toggleSidebar }) => {
           alert("Failed to update product details.");
         }
       }
+
       const response2 = await axios.put(
-        `http://localhost:5000/admin/updateproductdetail/${selectedProduct._id}`, // Assuming the product ID is available
+        `http://localhost:5000/admin/updateproductdetail/${selectedProduct._id}`,
         selectedProduct,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json", // Correct content type for form data
+            "Content-Type": "application/json",
           },
         }
       );
@@ -98,78 +146,30 @@ const ProductDetail = ({ toggleSidebar }) => {
     }
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = productDetails.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(productDetails.length / itemsPerPage);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
   const handleImageChange = (e) => {
     const files = e.target.files;
-    setTempImages(files); // Store the selected files in tempImages
+    setTempImages(files);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSelectedProduct((prevDetails) => ({
-      ...prevDetails,
-      [name]: value,
-    }));
+    setSelectedProduct((prevDetails) => ({ ...prevDetails, [name]: value }));
   };
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // To track the current image
-  const [imageCount, setImageCount] = useState(0); // To store the total number of images
 
-  useEffect(() => {
-    if (
-      selectedProduct &&
-      selectedProduct.images &&
-      selectedProduct.images.length > 0
-    ) {
-      setImageCount(selectedProduct.images.length); // Set the number of images available
-    }
-  }, [selectedProduct]);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = productDetails.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(productDetails.length / itemsPerPage);
 
-  useEffect(() => {
-    if (imageCount > 1) {
-      const intervalId = setInterval(() => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageCount); // Update image index every 3 seconds
-      }, 3000); // Change image every 3 seconds
-
-      return () => clearInterval(intervalId); // Cleanup interval on component unmount
-    }
-  }, [imageCount]);
   return (
     <div
-      className="container p-0 m-0"
+      className="container-fluid p-0 m-0"
       style={{ width: "100%", backgroundColor: "#E7E3ED", overflowX: "hidden" }}
     >
-      <nav
-        className="navbar navbar-light bg-white shadow-sm p-3 mb-5"
-        style={{
-          height: "100px",
-          width: "100%",
-          borderBottomLeftRadius: "15px",
-          borderBottomRightRadius: "15px",
-        }}
-      >
-        <button
-          className="navbar-toggler no-border "
-          type="button"
-          onClick={toggleSidebar}
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <span className="navbar-brand">E-Commerce Dashboard</span>
-      </nav>
       <div
         style={{
           display: "flex",
@@ -271,31 +271,118 @@ const ProductDetail = ({ toggleSidebar }) => {
           </Pagination>
         </div>
       ) : (
-        <div className="container  p-4 m-4 ">
+        <div className="container-fluid p-4 m-4 ">
           <div className="row ">
             <div
-              className="col-10 justify-center card col-sm-10 col-md-10 col-lg-4 m-3 p-0"
-              style={{ height: "auto" }}
+              className={`col-10 justify-center card col-sm-10 col-md-10 col-lg-4 m-3 p-0 ${
+                !isSmallScreen ? "position-sticky" : ""
+              }`}
+              style={{ height: "auto", top: "20px" }}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
-              {selectedProduct.images && selectedProduct.images.length > 0 ? (
-                <img
-                  src={`http://localhost:5000/${
-                    selectedProduct.images[
-                      imageCount > 1 ? currentImageIndex : 0
-                    ]
-                  }`}
-                  alt={`Product  ${imageCount > 1 ? currentImageIndex + 1 : 1}`}
-                  className="card-img-top"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                />
-              ) : (
-                <p>No images available</p>
-              )}
+              <div className="position-relative">
+                {selectedProduct.images && selectedProduct.images.length > 0 ? (
+                  <img
+                    src={`http://localhost:5000/${selectedProduct.images[selectedImageIndex]}`}
+                    alt={selectedProduct.name}
+                    className="card-img-top"
+                    style={{
+                      border: isSmallScreen ? "2px solid #000" : "none", // Border for small screen
+                      borderRadius: "8px",
+                      width: "100%",
+                      height: "300px",
+                      objectFit: "contain",
+                    }}
+                  />
+                ) : (
+                  <p>No images available</p>
+                )}
+
+                {/* Navigation Arrows */}
+                {isHovered && (
+                  <>
+                    <button
+                      className="btn btn-outline-secondary position-absolute top-50 start-0 translate-middle-y"
+                      onClick={handlePrev}
+                      style={{
+                        zIndex: 10,
+                        borderRadius: "50%",
+                        width: "50px",
+                        height: "50px",
+                        fontSize: "24px",
+                        backgroundColor: "white",
+                        border: "2px solid #007bff",
+                        color: "#007bff",
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.target.style.backgroundColor = "black")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.target.style.backgroundColor = "white")
+                      }
+                    >
+                      &#8249;
+                    </button>
+                    <button
+                      className="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y"
+                      onClick={handleNext}
+                      style={{
+                        zIndex: 10,
+                        borderRadius: "50%",
+                        width: "50px",
+                        height: "50px",
+                        fontSize: "24px",
+                        backgroundColor: "white",
+                        border: "2px solid #007bff",
+                        color: "#007bff",
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.target.style.backgroundColor = "black")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.target.style.backgroundColor = "white")
+                      }
+                    >
+                      &#8250;
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Thumbnails below the main image */}
+              <div className="d-flex mt-2 justify-content-center">
+                {selectedProduct.images.map((image, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleImageClick(index)} // Update main image on click
+                    style={{
+                      cursor: "pointer",
+                      margin: "0 5px",
+                      border:
+                        selectedImageIndex === index
+                          ? "2px solid #007bff"
+                          : "2px solid #ddd", // Highlight border for selected image
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <img
+                      src={`http://localhost:5000/${image}`} // Thumbnail image
+                      alt={`Product  ${index + 1}`}
+                      className="img-fluid"
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
+
             <div
               className="col-10 col-sm-10 col-md-10 col-lg-7 bg-white m-3 p-2"
               style={{ height: "auto", borderRadius: "8px" }}
@@ -411,13 +498,6 @@ const ProductDetail = ({ toggleSidebar }) => {
           </div>
         </div>
       )}
-
-      <div
-        className="flex card shadow-sm p-4 m-4 mb-0"
-        style={{ backgroundColor: "white" }}
-      >
-        <p>Copyright © 2025 Ecommerce. All rights reserved</p>
-      </div>
     </div>
   );
 };

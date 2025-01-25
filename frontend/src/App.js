@@ -126,7 +126,6 @@ const App = () => {
                     <Feature />
                     <Explore style={{ width: "80%" }} />
                     <Digital />
-                    <OrderHistory />
                     <ProductLanding />
                     <HowToGetStarted />
                   </>

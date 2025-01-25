@@ -28,6 +28,7 @@ const ShoppingCart = ({ updateCartCount }) => {
         );
 
         if (response.status === 200) {
+          console.log(response.data.data);
           setCartItems(response.data.data);
         } else {
           setAuthError("Error fetching cart items.");
@@ -94,16 +95,33 @@ const ShoppingCart = ({ updateCartCount }) => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-
   const handleBuyAll = async () => {
     const token = localStorage.getItem("usertoken");
     if (!token) {
       setAuthError("User not authenticated. Please log in.");
       return;
     }
-    console.log(cartItems);
+
+    // Check stock availability for all items in the cart
+    const insufficientStockItems = cartItems.filter(
+      (item) => item.quantity > item.stockQuantity
+    );
+
+    if (insufficientStockItems.length > 0) {
+      // Generate an alert message for items with insufficient stock
+      const alertMessage = insufficientStockItems
+        .map(
+          (item) =>
+            `Product: ${item.name} - Available: ${item.stockQuantity}, Requested: ${item.quantity}`
+        )
+        .join("\n");
+
+      alert(`The following items have insufficient stock:\n${alertMessage}`);
+      return; // Stop further processing if any item has insufficient stock
+    }
+
+    // Proceed with the purchase if all items have sufficient stock
     try {
-      // Send the cart items to the backend to process the purchase
       const res = await axios.post(
         "http://localhost:5000/user/UpdateCart",
         { cartItems },
@@ -114,10 +132,8 @@ const ShoppingCart = ({ updateCartCount }) => {
 
       if (res.status === 200) {
         alert(res.data.message); // Show confirmation message
-        updateCartCount(); // Update the cart count in the parent component (pass an empty array or updated data)
-        navigate("/checkout", {
-          state: { cartItems },
-        });
+        updateCartCount(); // Update the cart count in the parent component
+        navigate("/checkout", { state: { cartItems } });
       } else {
         alert("Error processing your purchase. Please try again.");
       }
@@ -185,9 +201,11 @@ const ShoppingCart = ({ updateCartCount }) => {
                   </Col>
                   <Col xs={12} md={6}>
                     <span>{item.name}</span>
-                    {item.price && (
-                      <small className="text-muted d-block">
-                        Size: {item.price}
+                    {/* {item.status !== "active" && ( */}
+                    {item.status && (
+                      <small className="text-danger d-block">
+                        {item.status}
+                        {item.stockQuantity}
                       </small>
                     )}
                     <Button

@@ -1,56 +1,36 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./Navbar.css";
+import { useAuth } from "../context/AuthContext";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
-const Nav = () => {
+const Navbar = () => {
   const navigation = useNavigate();
   const [activeLink, setActiveLink] = useState("");
 
-  const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem("admintoken");
-
-      if (token) {
-        await axios.post(
-          "http://localhost:5000/admin/adminLogout",
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        localStorage.removeItem("admintoken");
-        navigation("/login", { replace: true });
-        alert("Logged out successfully");
-      } else {
-        alert("No token found, user might already be logged out.");
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-      const errorMessage =
-        error.response?.data?.message || "Failed to log out. Please try again.";
-      alert(errorMessage);
-    }
-  };
-
+  const { authState, setAuthState } = useAuth();
   const handleLinkClick = (linkName) => {
     setActiveLink(linkName);
     navigation(`/${linkName}`);
   };
-
+  const handleLogout = () => {
+    localStorage.removeItem("admintoken");
+    setAuthState({ token: null }); // Clear the token in context
+    navigation("/login", { replace: true }); // Navigate to the login page
+  };
   return (
-    <nav
-      className="navbar navbar-dark fixed-top"
-      style={{ backgroundColor: "#E7E3ED" }}
-    >
+    <nav className="navbar navbar-dark custom-navbar fixed-top">
       <div className="container-fluid">
+        {/* Brand Name */}
+        <a className="navbar-brand custom-navbar-brand" href="/">
+          Admin Dashboard
+        </a>
+
+        {/* Toggle Button on Right */}
         <button
-          className="navbar-toggler me-2"
+          className="navbar-toggler ms-auto"
           type="button"
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasNavbar"
@@ -60,32 +40,30 @@ const Nav = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Brand Name */}
-        <a className="navbar-brand" href="/">
-          Admin Dashboard
-        </a>
-
-        {/* Offcanvas Content */}
+        {/* Sidebar (Offcanvas) */}
         <div
           className="offcanvas offcanvas-start"
           tabIndex="-1"
           id="offcanvasNavbar"
           aria-labelledby="offcanvasNavbarLabel"
-          style={{ backgroundColor: "#E7E3ED" }}
         >
           <div className="offcanvas-header">
-            <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
+            <h5
+              className="offcanvas-title custom-navbar-title"
+              id="offcanvasNavbarLabel"
+            >
               Admin Menu
             </h5>
             <button
               type="button"
-              className="btn-close btn-close-dark"
+              className="btn-close btn-close-white"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
             ></button>
           </div>
-          <div className="offcanvas-body d-flex flex-column">
-            <ul className="navbar-nav justify-start flex-grow-1 pe-3">
+          <hr />
+          <div className="offcanvas-body d-flex justify-content-space-between">
+            <ul className="navbar-nav">
               {[
                 "Dashboard",
                 "Product",
@@ -119,7 +97,6 @@ const Nav = () => {
               ))}
             </ul>
 
-            {/* Logout Button at the Bottom */}
             <div className="mt-auto p-3">
               <button className="btn btn-danger w-100" onClick={handleLogout}>
                 <i className="bi bi-box-arrow-right pe-2"></i> Logout
@@ -132,4 +109,4 @@ const Nav = () => {
   );
 };
 
-export default Nav;
+export default Navbar;

@@ -3,12 +3,13 @@ import cors from "cors";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dotenv from "dotenv";
-import { User } from "./Models/User.js";
+// import { User } from "./Models/User.js";
 import AdminRoutes from "./Routes/AdminRoute.js";
 import UserRoutes from "./Routes/UserRoute.js";
 import { ConnectDB } from "./Database/ConnectDB.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import dashboardRoutes from "./Routes/dashboardroutes.js";
 
 // Get current directory from the file URL
 const __filename = fileURLToPath(import.meta.url);
@@ -78,6 +79,7 @@ app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
+app.use("/api", dashboardRoutes);
 app.use("/admin", AdminRoutes);
 app.use("/user", UserRoutes);
 

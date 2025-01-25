@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const Product = ({ toggleSidebar }) => {
+const Product = () => {
   const [productDetails, setProductDetails] = useState({
     name: "",
     description: "",
@@ -75,34 +75,13 @@ const Product = ({ toggleSidebar }) => {
 
   return (
     <div
-      className="container p-0 m-0"
+      className="container-fluid p-0 m-0"
       style={{
         width: "100%",
         backgroundColor: "#E7E3ED",
         overflowX: "hidden",
       }}
     >
-      <nav
-        className="navbar navbar-light bg-white shadow-sm p-3 mb-5"
-        style={{
-          height: "100px",
-          width: "100%",
-          borderBottomLeftRadius: "15px",
-          borderBottomRightRadius: "15px",
-        }}
-      >
-        <button
-          className="navbar-toggler no-border "
-          type="button"
-          onClick={toggleSidebar} // Toggle sidebar when clicked
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <span className="navbar-brand">E-Commerce Dashboard</span>
-      </nav>
       <div
         className="card shadow-sm p-4 m-4"
         style={{ backgroundColor: "white" }}
@@ -238,14 +217,6 @@ const Product = ({ toggleSidebar }) => {
             </button>
           </div>
         </form>
-      </div>
-      <div
-        className="flex  card shadow-sm p-4 m-4 mb-0"
-        style={{
-          backgroundColor: "white",
-        }}
-      >
-        <p>Copyright © 2025 Ecommerce. All rights reserved</p>
       </div>
     </div>
   );

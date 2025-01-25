@@ -13,7 +13,11 @@ import {
   changepassword,
   countProductsInCart,
 } from "../Controllers/UserController.js";
-import { createOrder, orderhistory } from "../Controllers/OrderController.js";
+import {
+  createOrder,
+  orderhistory,
+  cancelorder,
+} from "../Controllers/OrderController.js";
 const router = express.Router();
 
 router.get("/productsdetail", productsdetail);
@@ -34,6 +38,7 @@ router.delete(
 );
 router.post("/userLogout", AuthenticateJWT(["user"]), userLogout);
 router.post("/checkout", AuthenticateJWT(["user"]), createOrder);
+router.post("/cancelorder", AuthenticateJWT(["user"]), cancelorder);
 router.get("/orderhistory", AuthenticateJWT(["user"]), orderhistory);
 router.post("/userLogin", userLogin);
 router.get("/searchproduct", searchproduct);

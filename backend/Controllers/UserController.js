@@ -129,6 +129,64 @@ export const searchproduct = async (req, res) => {
   }
 };
 
+// export const cartdetail = async (req, res) => {
+//   try {
+//     // Fetch the active cart for the user
+//     const cart = await Cart.findOne({
+//       user: req.user.userId,
+//       status: "active",
+//     }).populate({
+//       path: "items.product",
+//       model: "Product", // Ensure this matches your Product model name
+//       select: "name price images",
+//     });
+
+//     // console.log(cart); // Log the populated cart to check if product details are there
+
+//     if (!cart || cart.items.length === 0) {
+//       return res.status(404).json({ message: "Cart is empty." });
+//     }
+
+//     // Log the cart to inspect its structure
+//     // console.log(cart);
+
+//     // Map over the items and extract necessary details
+//     const cartItems = cart.items
+//       .map((item) => {
+//         if (!item.product) {
+//           // Log a message if the product is missing
+//           console.error("Missing product for cart item:", item);
+//           return null; // Or return a default object with minimal information
+//         }
+
+//         return {
+//           id: item.product._id,
+//           name: item.product.name,
+//           price: item.product.price,
+//           quantity: item.quantity,
+//           image:
+//             item.product.images && item.product.images.length > 0
+//               ? item.product.images[0]
+//               : null, // Safely get image
+//         };
+//       })
+//       .filter((item) => item !== null); // Filter out any null values (in case some items were missing products)
+
+//     // If there are no valid cart items after filtering
+//     if (cartItems.length === 0) {
+//       return res.status(404).json({ message: "No valid items in the cart." });
+//     }
+
+//     res.status(200).json({ data: cartItems });
+//   } catch (error) {
+//     console.error("Error fetching cart:", error);
+//     res.status(500).json({
+//       message: "Failed to fetch cart.",
+//       error: error.message || "Unknown error",
+//     });
+//   }
+// };
+
 export const cartdetail = async (req, res) => {
   try {
     // Fetch the active cart for the user
@@ -138,25 +196,19 @@ export const cartdetail = async (req, res) => {
     }).populate({
       path: "items.product",
       model: "Product", // Ensure this matches your Product model name
-      select: "name price images",
+      select: "name price images stockQuantity status", // Add fields like stockQuantity and status if needed
     });
 
-    // console.log(cart); // Log the populated cart to check if product details are there
-
-    if (!cart || cart.items.length === 0) {
-      return res.status(404).json({ message: "Cart is empty." });
+    if (!cart || !cart.items || cart.items.length === 0) {
+      return res.status(404).json({ message: "Cart is empty or inactive." });
     }
-
-    // Log the cart to inspect its structure
-    // console.log(cart);
 
     // Map over the items and extract necessary details
     const cartItems = cart.items
       .map((item) => {
         if (!item.product) {
-          // Log a message if the product is missing
-          console.error("Missing product for cart item:", item);
-          return null; // Or return a default object with minimal information
+          console.warn(`Product details missing for item: ${item._id}`);
+          return null; // Skip items with missing product details
         }
 
         return {
@@ -164,25 +216,24 @@ export const cartdetail = async (req, res) => {
           name: item.product.name,
           price: item.product.price,
           quantity: item.quantity,
-          image:
-            item.product.images && item.product.images.length > 0
-              ? item.product.images[0]
-              : null, // Safely get image
+          image: item.product.images?.[0] || null, // Safely access the first image
+          stockQuantity: item.product.stockQuantity, // Include stockQuantity for frontend checks
+          status: item.product.status, // Include status for frontend checks
         };
       })
-      .filter((item) => item !== null); // Filter out any null values (in case some items were missing products)
+      .filter(Boolean); // Remove null values from the array
 
-    // If there are no valid cart items after filtering
     if (cartItems.length === 0) {
       return res.status(404).json({ message: "No valid items in the cart." });
     }
 
+    // Return the cart details
     res.status(200).json({ data: cartItems });
   } catch (error) {
     console.error("Error fetching cart:", error);
     res.status(500).json({
       message: "Failed to fetch cart.",
-      error: error.message || "Unknown error",
+      error: error.message || "Unknown error occurred.",
     });
   }
 };
