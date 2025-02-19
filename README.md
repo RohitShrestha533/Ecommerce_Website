@@ -1,51 +1,56 @@
-"# Ecommercewebsite"
+# Ecommercewebsite
 
-E-Commerce Website for Local Nepali Products
+## .env file
 
-Overview
+- **PORT=**
+- **MONGO_URI=**
+- **JWT_SECRET_KEY=**
+- **EMAIL_PASS=**
+- **EMAIL=**
 
-This is an e-commerce website dedicated to promoting and selling local Nepali products. The platform allows customers to explore a variety of authentic Nepali goods, purchase them securely, and support local artisans and businesses.
+# E-Commerce Nepal
 
-Features
+**A Platform for Promoting and Selling Local Nepali Products**
 
-User authentication (Sign up, Login, Logout)
+E-Commerce Nepal is a dedicated marketplace that connects local artisans and businesses with customers, promoting authentic Nepali products.
 
-Browse products by categories
+## Get Started
 
-Search and filter functionality
+E-Commerce Nepal provides a seamless shopping experience by offering a variety of local products, secure transactions, and easy order management.
 
-Secure payment integration
+## Features
 
-Shopping cart and order management
+- **User Authentication**: Secure login and registration using JWT.
+- **Product Categories**: Browse through a wide range of local Nepali products.
+- **Search & Filter**: Easily find products with advanced search and filtering options.
+- **Secure Payments**: Integrated with Stripe/Khalti for secure transactions.
+- **Shopping Cart & Orders**: Add products to the cart, place orders, and track deliveries.
+- **Admin Dashboard**: Manage products, orders, and users efficiently.
 
-Admin dashboard for managing products and orders
+## Technology Stack
 
-Responsive design for mobile and desktop
+### Frontend
 
-Tech Stack
+- **React.js**: For building an interactive user interface.
+- **Bootstrap**: For responsive and modern UI design.
 
-Frontend
+### Backend
 
-React.js
+- **Node.js**: Backend runtime environment.
+- **Express.js**: Framework for building RESTful APIs.
+- **MongoDB**: Database for storing application data.
 
-HTML, CSS, JavaScript
+### Authentication
 
-Bootstrap / Tailwind CSS (for styling)
+- **JWT (JSON Web Token)**: For secure user authentication.
 
-Backend
+## Authors
 
-Node.js
+- **Rohit Shrestha**
 
-Express.js
+## Related
 
-MongoDB (Database)
+### Supported Platforms
 
-Additional Tools
-
-JWT for authentication
-
-Stripe or Khalti for payment gateway
-
-Cloudinary for image storage
-
-Redux for state management (if applicable)
+- Web application accessible via modern browsers.
+- Mobile responsiveness for shopping on the go.
